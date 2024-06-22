@@ -187,7 +187,7 @@ begin
 	select nombre,
 	presupuesto - gastos as presupuesto_actual 
 	from departamento
-	order by  presupuesto_actual  asc;
+	order by  presupuesto_actual  asc;-- creado por: Helen Nataly Parga Murillo C.C. 1.001.301.103
 end //
 delimiter ;
 call list_nombre_depa_presu();
@@ -313,42 +313,221 @@ call list_nomb_dep_gasto_mon();
 -- 23. Devuelve una lista con el nombre de los departamentos y el presupuesto, de
 -- aquellos que tienen un presupuesto entre 100000 y 200000 euros. Sin
 -- utilizar el operador BETWEEN.
+delimiter //
+create procedure list_nom_dep_pres()
+begin
+	 select nombre, presupuesto 
+	 from departamento
+	 where presupuesto >= 100000 and presupuesto <= 200000;
+end //
+delimiter ; 
 
- select nombre, presupuesto 
- from departamento
- where presupuesto >= 100000 and presupuesto <= 200000;
- 
+call list_nom_dep_pres();
  -- 24 Devuelve una lista con el nombre de los departamentos que no tienen un
 -- presupuesto entre 100000 y 200000 euros. Sin utilizar el operador BETWEEN.
+delimiter //
+create procedure lis_nom_dep_presub() 
+begin
+	 select nombre, presupuesto 
+	 from departamento-- creado por: Helen Nataly Parga Murillo C.C. 1.001.301.103
+	 where presupuesto < 100000 or presupuesto > 200000;
+end //
+delimiter ;
 
- select nombre, presupuesto 
- from departamento
- where presupuesto < 100000 or presupuesto > 200000;
+call lis_nom_dep_presub() ;
+
+ 
  
  -- 25 Devuelve una lista con el nombre de los departamentos que tienen un
 -- presupuesto entre 100000 y 200000 euros. Utilizando el operador BETWEEN.
- DELIMITER //
-
-CREATE FUNCTION ObtenerDepartamentosPorPresupuesto (
-    presupuesto_minimo DECIMAL(15, 2),
-    presupuesto_maximo DECIMAL(15, 2)
-)
-RETURNS VARCHAR(1000)
-BEGIN
-    DECLARE lista_departamentos VARCHAR(1000);
-
-    SELECT GROUP_CONCAT(nombre SEPARATOR ', ')
-    INTO lista_departamentos
-    FROM Departamentos
-    WHERE presupuesto BETWEEN presupuesto_minimo AND presupuesto_maximo;
-
-    RETURN lista_departamentos;
-END//
-
-DELIMITER ;
+delimiter //
+create procedure lis_nombr_depa_presucb()
+begin
+	select  nombre , presupuesto
+    from departamento 
+    where presupuesto between 100000 and 200000;
+end //
+delimiter ;
+call lis_nombr_depa_presucb();
  
  -- 26 Devuelve una lista con el nombre de los departamentos que no tienen un
 -- presupuesto entre 100000 y 200000 euros. Utilizando el operador BETWEEN.
 
+delimiter //
+create procedure list_nom_departa_nopresu_bt()
+begin 
+	select nombre , presupuesto
+    from departamento
+    where presupuesto not between 100000 and 200000;
+end //
+delimiter ;
+call list_nom_departa_nopresu_bt();
 
+-- 27. Devuelve una lista con el nombre de los departamentos, gastos y
+-- presupuesto, de aquellos departamentos donde los gastos sean mayores
+-- que el presupuesto del que disponen.
+ delimiter //
+ create procedure lis_nom_dep_gasto_pres_myo()
+ begin
+	select nombre , gastos , presupuesto 
+    from departamento
+    where gastos > presupuesto ;
+ end //
+ delimiter ;
+ call lis_nom_dep_gasto_pres_myo();
  
+ -- 28 28. Devuelve una lista con el nombre de los departamentos, gastos y
+-- presupuesto, de aquellos departamentos donde los gastos sean menores
+-- que el presupuesto del que disponen.
+
+delimiter //
+create procedure lis_nom_dep_gas_mno()
+begin
+	select nombre , gastos , presupuesto
+    from departamento
+    where gastos < presupuesto;
+end //
+delimiter ;
+
+call lis_nom_dep_gas_mno();
+-- 29. Devuelve una lista con el nombre de los departamentos, gastos y
+-- presupuesto, de aquellos departamentos donde los gastos sean iguales al
+-- presupuesto del que disponen.
+
+delimiter //
+create procedure lis_nom_dep_gast_pres_igu()
+begin
+	select nombre , gastos , presupuesto
+    from departamento
+    where gastos = presupuesto;
+end //
+delimiter ;
+call lis_nom_dep_gast_pres_igu();
+
+-- 30. Lista todos los datos de los empleados cuyo segundo apellido sea NULL.
+
+delimiter //
+create procedure list_tbl_emple_apenull()
+begin
+	select * from empleado
+    where apellido2 is null;
+end //
+delimiter ;
+call list_tbl_emple_apenull();
+
+-- 31. Lista todos los datos de los empleados cuyo segundo apellido no sea NULL.
+
+delimiter //
+create procedure lis_datos_empl_null()
+begin
+	select * from empleado 
+    where apellido2 is not null;
+end //
+delimiter ;
+
+call lis_datos_empl_null();
+
+-- 32. Lista todos los datos de los empleados cuyo segundo apellido sea López
+delimiter //
+create procedure lis_datos_emp_lopez()
+begin 
+	select * from empleado 
+	where apellido2 =  'López';
+end // 
+delimiter ;
+call lis_datos_emp_lopez();
+
+-- 33. Lista todos los datos de los empleados cuyo segundo apellido sea Díaz o Moreno. Sin utilizar el operador IN.
+delimiter //
+create procedure lis_datos_emp_diaz_sin_in()
+begin 
+	select * from empleado 
+	where apellido2 =  'Díaz' OR apellido2 = 'Moreno';
+end // 
+delimiter ;
+call lis_datos_emp_diaz_sin_in();
+ -- 34. Lista todos los datos de los empleados cuyo segundo apellido
+-- sea Díaz o Moreno. Utilizando el operador IN.
+delimiter //
+create procedure lis_datos_emp_DoM_con_in()
+begin 
+	select * from empleado 
+	where (apellido2 =  'Díaz') IN (apellido2 = 'Moreno');
+end // 
+delimiter ;
+call lis_datos_emp_diaz_sin_in();
+-- 35. Lista los nombres, apellidos y nif de los empleados que trabajan en el
+-- departamento 3.
+delimiter //
+create procedure lis_datos_emp_DoM_con_in()
+begin 
+	select * from empleado 
+	where (apellido2 =  'Díaz') IN (apellido2 = 'Moreno');
+end // 
+delimiter ;
+call lis_datos_emp_diaz_sin_in();
+
+-- 36. Lista los nombres, apellidos y nif de los empleados que trabajan en los
+-- departamentos 2, 4 o 5.
+delimiter //
+create procedure lis_nomb_apell_nif_245()
+begin 
+	select nombre , apellido1 , apellido2 , nif, id_departamento
+    from empleado
+	where id_departamento in (2, 4 ,5);
+end // 
+delimiter ;
+call  lis_nomb_apell_nif_245();
+drop procedure lis_nomb_apell_nif_245;
+
+##############################################################
+####### Consultas multitabla (Composición interna) ###########
+############################################################## 
+-- 1. Devuelve un listado con los empleados y los datos de los departamentos
+-- donde trabaja cada uno.
+delimiter //
+create procedure list_emp_departa()
+begin
+	SELECT * from empleado e  
+	inner JOIN departamento d ON d.id = e.id_departamento;
+end //
+delimiter ;
+call list_emp_departa();
+
+-- 2. Devuelve un listado con los empleados y los datos de los departamentos
+-- donde trabaja cada uno. Ordena el resultado, en primer lugar por el nombre
+-- del departamento (en orden alfabético) y en segundo lugar por los apellidos
+-- y el nombre de los empleados.
+DELIMITER //
+
+CREATE PROCEDURE list_emp_departa_ord()
+BEGIN
+    SELECT *
+    FROM empleado e
+    INNER JOIN departamento d ON d.id = e.id_departamento
+    ORDER BY d.nombre , e.apellido1 , e.apellido2 , e.apellido1 ASC;
+END //
+
+DELIMITER ;
+
+call list_emp_departa_ord();
+
+drop PROCEDURE list_emp_departa_ord;
+
+-- 3. Devuelve un listado con el identificador y el nombre del departamento,
+--    solamente de aquellos departamentos que tienen empleados.
+
+delimiter //
+create procedure list_id_nom_dep_emp()
+begin 
+	SELECT distinct d.id, d.nombre
+	FROM departamento d
+	INNER JOIN empleado e ON d.id = e.id_departamento
+    where e.id_departamento is not null;
+end //
+delimiter ;
+call list_id_nom_dep_emp();
+
+drop  procedure list_id_nom_dep_emp
+
+-- creado por: Helen Nataly Parga Murillo C.C. 1.001.301.103
